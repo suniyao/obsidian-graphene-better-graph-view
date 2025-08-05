@@ -15,10 +15,12 @@ const COMBINED_DEFAULT_SETTINGS: CombinedPluginSettings = {
 export default class CombinedPlugin extends Plugin {
     settings: CombinedPluginSettings;
     embeddingService: EmbeddingService;
+    embeddingStatusEl: HTMLElement | null = null;
 
     async onload() {
         await this.loadSettings();
-        this.embeddingService = new EmbeddingService(this.settings);
+        this.embeddingService = new EmbeddingService(this.settings, this.app);
+        await this.embeddingService.loadCache();
 
         // Register the Better Graph view
         this.registerView(
@@ -65,6 +67,80 @@ export default class CombinedPlugin extends Plugin {
         // Add combined settings tab
         this.addSettingTab(new CombinedSettingTab(this.app, this));
     }
+
+    async generateEmbeddings(showProgress = true): Promise<void> {
+        const progress = showProgress ? new Notice('', 0) : null;
+        
+        await this.embeddingService.generateIncrementalEmbeddings(
+            (current, total, fileName) => {
+                if (progress) {
+                    progress.setMessage(`Processing ${current}/${total}: ${fileName}`);
+                }
+            },
+            () => {
+                if (this.embeddingStatusEl) {
+                    this.updateEmbeddingStatusUI();
+                }
+            }
+        );
+        
+        if (progress) {
+            progress.hide();
+        }
+    }
+
+    updateEmbeddingStatusUI(): void {
+        if (!this.embeddingStatusEl) return;
+        
+        const stats = this.embeddingService.getEmbeddingStats();
+        
+        this.embeddingStatusEl.empty();
+        
+        const statusContainer = this.embeddingStatusEl.createDiv('embedding-status-container');
+        
+        statusContainer.createEl('h4', { text: 'Embedding Status' });
+        
+        const statusList = statusContainer.createDiv('status-list');
+        
+        this.createStatusItem(statusList, 'Total files', stats.total, 'default');
+        this.createStatusItem(statusList, 'Up to date', stats.upToDate, 'success');
+        
+        if (stats.modified > 0) {
+            this.createStatusItem(statusList, 'Modified', stats.modified, 'warning');
+        }
+        
+        if (stats.new > 0) {
+            this.createStatusItem(statusList, 'New', stats.new, 'info');
+        }
+        
+        if (stats.processing > 0) {
+            this.createStatusItem(statusList, 'Processing', stats.processing, 'processing');
+        }
+        
+        // Add update button if needed
+        if (stats.modified > 0 || stats.new > 0) {
+            const buttonContainer = statusContainer.createDiv('button-container');
+            const updateButton = buttonContainer.createEl('button', {
+                text: `Update ${stats.modified + stats.new} files`,
+                cls: 'mod-cta'
+            });
+            
+            updateButton.onclick = async () => {
+                updateButton.disabled = true;
+                updateButton.setText('Updating...');
+                await this.generateEmbeddings(true);
+                updateButton.disabled = false;
+                updateButton.setText('Update complete');
+            };
+        }
+    }
+
+    createStatusItem(container: HTMLElement, label: string, count: number, type: string): void {
+        const item = container.createDiv(`status-item status-${type}`);
+        item.createSpan({ text: label, cls: 'status-label' });
+        item.createSpan({ text: count.toString(), cls: 'status-count' });
+    }
+
 
     // Better Graph Methods
     async activateView() {

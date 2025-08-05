@@ -192,40 +192,50 @@ export class CombinedSettingTab extends PluginSettingTab {
         // Actions Section
         containerEl.createEl('h3', { text: 'Actions' });
 
+        // In the CombinedSettingTab class, update the display method:
+
+        // Add after the embedding model setting
         new Setting(containerEl)
-            .setName('Generate Embeddings')
-            .setDesc('Process all notes to create semantic embeddings')
+            .setName('Generate embeddings')
+            .setDesc('Generate embeddings for all markdown files to enable similarity search')
             .addButton(button => button
-                .setButtonText('Generate Now')
+                .setButtonText('Generate all')
                 .setCta()
                 .onClick(async () => {
-                    if (!this.plugin.settings.openaiApiKey) {
-                        new Notice('Please set your OpenAI API key first');
-                        return;
-                    }
                     button.setDisabled(true);
                     button.setButtonText('Generating...');
-                    try {
-                        await this.plugin.generateEmbeddingsForAllNotes();
-                    } finally {
-                        button.setDisabled(false);
-                        button.setButtonText('Generate Now');
-                    }
+                    await this.plugin.generateEmbeddings(true);
+                    button.setDisabled(false);
+                    button.setButtonText('Generate all');
+                    this.plugin.updateEmbeddingStatusUI();
                 }));
 
+        // Add embedding status display
+        const statusSetting = new Setting(containerEl)
+            .setName('Embedding status')
+            .setDesc('Current status of file embeddings');
+
+        this.plugin.embeddingStatusEl = statusSetting.controlEl.createDiv();
+        this.plugin.updateEmbeddingStatusUI();
+
+        // Add a "Clear cache" button for troubleshooting
         new Setting(containerEl)
-            .setName('Clear All Embeddings')
-            .setDesc('Remove all stored embeddings')
+            .setName('Clear embedding cache')
+            .setDesc('Remove all cached embeddings (use if experiencing issues)')
             .addButton(button => button
-                .setButtonText('Clear Embeddings')
+                .setButtonText('Clear cache')
                 .setWarning()
                 .onClick(async () => {
-                    const data = await this.plugin.loadData() || {};
-                    data.embeddings = {};
-                    data.embeddingMetadata = {};
-                    await this.plugin.saveData(data);
-                    new Notice('All embeddings cleared');
-                    this.updateEmbeddingStatus(containerEl.querySelector('.embedding-status') as HTMLElement);
+                    if (confirm('Are you sure you want to clear all embeddings? You will need to regenerate them.')) {
+                        this.plugin.embeddingCache = {
+                            version: '1.0.0',
+                            files: {},
+                            embeddings: {}
+                        };
+                        await this.plugin.saveEmbeddingCache();
+                        this.plugin.updateEmbeddingStatusUI();
+                        new Notice('Embedding cache cleared');
+                    }
                 }));
 
         new Setting(containerEl)

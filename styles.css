@@ -285,3 +285,85 @@
         width: 250px;
     }
 }
+
+/* Add at the end of the file */
+
+/* Embedding Status */
+.embedding-status-container {
+    padding: 16px;
+    background: var(--background-secondary);
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+.embedding-status-container h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: var(--background-primary);
+}
+
+.status-label {
+    font-size: 13px;
+    color: var(--text-normal);
+}
+
+.status-count {
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.status-default .status-count {
+    background: var(--background-modifier-border);
+    color: var(--text-normal);
+}
+
+.status-success .status-count {
+    background: var(--interactive-success);
+    color: var(--text-on-accent);
+}
+
+.status-warning .status-count {
+    background: var(--text-warning);
+    color: var(--background-primary);
+}
+
+.status-info .status-count {
+    background: var(--interactive-accent);
+    color: var(--text-on-accent);
+}
+
+.status-processing .status-count {
+    background: var(--text-accent);
+    color: var(--text-on-accent);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}

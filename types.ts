@@ -66,6 +66,7 @@ export interface GraphNode extends d3.SimulationNodeDatum {
     hidden?: boolean;
     type?: 'file' | 'tag' | 'attachment';
     connectionCount?: number;  // Add this for tag sizing
+    status?: 'up-to-date' | 'modified' | 'new' | 'processing'; // Add this
 }
 
 export interface GraphLink {
@@ -75,4 +76,18 @@ export interface GraphLink {
     similarity?: number;
     thickness?: number;
     type?: 'link' | 'tag-link';
+}
+
+// Add these interfaces
+export interface FileEmbeddingStatus {
+    path: string;
+    lastModified: number;
+    embeddingGenerated: number;
+    status: 'up-to-date' | 'modified' | 'new' | 'processing';
+}
+
+export interface EmbeddingCache {
+    version: string;
+    files: Record<string, FileEmbeddingStatus>;
+    embeddings: Record<string, number[]>;
 }

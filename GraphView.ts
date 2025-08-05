@@ -104,6 +104,8 @@ async loadGraphData() {
     // Create nodes for files
     for (const file of files) {
         const embedding = await this.plugin.getEmbeddingLocally(file.path);
+        const fileStatus = this.plugin.embeddingService.getFileStatus(file);
+        
         nodeMap.set(file.path, {
             id: file.path,
             name: file.basename,
@@ -113,7 +115,8 @@ async loadGraphData() {
             vx: 0,
             vy: 0,
             embedding: embedding || undefined,
-            type: 'file' as const
+            type: 'file' as const,
+            status: fileStatus
         });
     }
     
