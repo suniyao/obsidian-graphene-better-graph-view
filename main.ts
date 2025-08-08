@@ -17,9 +17,49 @@ export default class CombinedPlugin extends Plugin {
     embeddingService: EmbeddingService;
     embeddingStatusEl: HTMLElement | null = null;
 
+    async ensureDataStructure(): Promise<void> {
+        const dataFile = `${this.app.vault.configDir}/plugins/opal/data.json`;
+        
+        let data = {
+            version: '1.0.0',
+            embeddings: {
+                version: '1.0.0',
+                files: {},
+                embeddings: {}
+            },
+            graph: {
+                nodes: [],
+                links: []
+            }
+        };
+        
+        if (await this.app.vault.adapter.exists(dataFile)) {
+            try {
+                const existingData = await this.app.vault.adapter.read(dataFile);
+                const parsed = JSON.parse(existingData);
+                
+                // Merge with existing data
+                data = {
+                    ...data,
+                    ...parsed,
+                    embeddings: parsed.embeddings || data.embeddings,
+                    graph: parsed.graph || data.graph
+                };
+            } catch (error) {
+                console.error('Error reading data.json:', error);
+            }
+        }
+        
+        await this.app.vault.adapter.write(
+            dataFile,
+            JSON.stringify(data, null, 2)
+        );
+    }
+
     async onload() {
         await this.loadSettings();
         this.embeddingService = new EmbeddingService(this.settings, this.app);
+        await this.ensureDataStructure();
         await this.embeddingService.loadCache();
 
         // Register the Better Graph view

@@ -39,16 +39,28 @@ export class EmbeddingService {
 
     async loadCache(): Promise<void> {
         try {
-            const cacheFile = this.app.vault.adapter.path.join(
+            const dataFile = this.app.vault.adapter.path.join(
                 this.app.vault.configDir,
                 'plugins',
                 'opal',
-                'embedding-cache.json'
+                'data.json'
             );
             
-            if (await this.app.vault.adapter.exists(cacheFile)) {
-                const data = await this.app.vault.adapter.read(cacheFile);
-                this.embeddingCache = JSON.parse(data);
+            if (await this.app.vault.adapter.exists(dataFile)) {
+                const data = await this.app.vault.adapter.read(dataFile);
+                const parsedData = JSON.parse(data);
+                
+                // Extract embedding-related data from the unified data.json
+                if (parsedData.embeddings) {
+                    this.embeddingCache = parsedData.embeddings;
+                } else {
+                    // Initialize if not present
+                    this.embeddingCache = {
+                        version: '1.0.0',
+                        files: {},
+                        embeddings: {}
+                    };
+                }
             }
         } catch (error) {
             console.error('Failed to load embedding cache:', error);
@@ -57,19 +69,30 @@ export class EmbeddingService {
 
     async saveCache(): Promise<void> {
         try {
-            const cacheFile = this.app.vault.adapter.path.join(
+            const dataFile = this.app.vault.adapter.path.join(
                 this.app.vault.configDir,
                 'plugins',
                 'opal',
-                'embedding-cache.json'
+                'data.json'
             );
             
+            let existingData: any = {};
+            
+            // Load existing data first
+            if (await this.app.vault.adapter.exists(dataFile)) {
+                const data = await this.app.vault.adapter.read(dataFile);
+                existingData = JSON.parse(data);
+            }
+            
+            // Update embeddings section
+            existingData.embeddings = this.embeddingCache;
+            
             await this.app.vault.adapter.write(
-                cacheFile,
-                JSON.stringify(this.embeddingCache, null, 2)
+                dataFile,
+                JSON.stringify(existingData, null, 2)
             );
         } catch (error) {
-            console.error('Failed to save embedding cache:', error);
+            console.error('Failed to save data:', error);
         }
     }
 
