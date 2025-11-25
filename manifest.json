@@ -1,11 +1,11 @@
 {
-	"id": "opal",
-	"name": "Opal",
+	"id": "graphene",
+	"name": "Graphene",
 	"version": "0.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Creates a semantic graph based on content similarity using OpenAI embeddings",
-	"author": "YourName",
-	"authorUrl": "https://yourwebsite.com",
-	"fundingUrl": "https://buymeacoffee.com",
-	"isDesktopOnly": false
+	"author": "Steph Yao",
+	"authorUrl": "https://stephyao.com",
+	"fundingUrl": "https://buymeacoffee.com/stephsnyaow",
+	"isDesktopOnly": true
 }
