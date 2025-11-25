@@ -1,5 +1,894 @@
 {
   "version": "1.0.0",
-  "files": {},
+  "files": {
+    "z-dailynotes/2025-08-02 (actual mid-PAIR reflection).md": {
+      "path": "z-dailynotes/2025-08-02 (actual mid-PAIR reflection).md",
+      "lastModified": 1754165347662,
+      "embeddingGenerated": 1764031540261,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-11-13.md": {
+      "path": "z-dailynotes/2025-11-13.md",
+      "lastModified": 1763091893267,
+      "embeddingGenerated": 1764031540381,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-05-06 research method & ethics.md": {
+      "path": "z-dailynotes/2025-05-06 research method & ethics.md",
+      "lastModified": 1746578537968,
+      "embeddingGenerated": 1764031540470,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-10-27.md": {
+      "path": "z-dailynotes/2025-10-27.md",
+      "lastModified": 1761555701725,
+      "embeddingGenerated": 1764031540518,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-10-07 symmetric information transfer and motivated convo.md": {
+      "path": "z-dailynotes/2025-10-07 symmetric information transfer and motivated convo.md",
+      "lastModified": 1760256513708,
+      "embeddingGenerated": 1764031540583,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-08-18.md": {
+      "path": "z-dailynotes/2025-08-18.md",
+      "lastModified": 1755557908290,
+      "embeddingGenerated": 1764031540659,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-08-05.md": {
+      "path": "z-dailynotes/2025-08-05.md",
+      "lastModified": 1754385687048,
+      "embeddingGenerated": 1764031540756,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-05-21.md": {
+      "path": "z-dailynotes/2025-05-21.md",
+      "lastModified": 1751067454913,
+      "embeddingGenerated": 1764031540842,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-04-25.md": {
+      "path": "z-dailynotes/2025-04-25.md",
+      "lastModified": 1745989595000,
+      "embeddingGenerated": 1764031540934,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-04-01.md": {
+      "path": "z-dailynotes/2025-04-01.md",
+      "lastModified": 1743572705000,
+      "embeddingGenerated": 1764031540986,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-02-16.md": {
+      "path": "z-dailynotes/2025-02-16.md",
+      "lastModified": 1739759585000,
+      "embeddingGenerated": 1764031541070,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-03-24 (a letter to 2026, from 2025).md": {
+      "path": "z-dailynotes/2025-03-24 (a letter to 2026, from 2025).md",
+      "lastModified": 1742811819000,
+      "embeddingGenerated": 1764031541146,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-01-26.md": {
+      "path": "z-dailynotes/2025-01-26.md",
+      "lastModified": 1737895467000,
+      "embeddingGenerated": 1764031541226,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-01-19.md": {
+      "path": "z-dailynotes/2025-01-19.md",
+      "lastModified": 1737300887000,
+      "embeddingGenerated": 1764031541304,
+      "status": "modified"
+    },
+    "z-dailynotes/2025-01-11 (a letter to 2024, from 2025).md": {
+      "path": "z-dailynotes/2025-01-11 (a letter to 2024, from 2025).md",
+      "lastModified": 1736575323000,
+      "embeddingGenerated": 1764031541360,
+      "status": "modified"
+    },
+    "Physics/LL.md": {
+      "path": "Physics/LL.md",
+      "lastModified": 1745888333000,
+      "embeddingGenerated": 1764031541476,
+      "status": "modified"
+    },
+    "Physics/whatever review.md": {
+      "path": "Physics/whatever review.md",
+      "lastModified": 1745841569000,
+      "embeddingGenerated": 1764031541554,
+      "status": "modified"
+    },
+    "Physics/relativity.md": {
+      "path": "Physics/relativity.md",
+      "lastModified": 1745755300000,
+      "embeddingGenerated": 1764031541596,
+      "status": "modified"
+    },
+    "Physics/E-Nuclear and Quantum Physics.md": {
+      "path": "Physics/E-Nuclear and Quantum Physics.md",
+      "lastModified": 1745661061000,
+      "embeddingGenerated": 1764031541672,
+      "status": "modified"
+    },
+    "IEOR198/9-High-Frequency Trading.md": {
+      "path": "IEOR198/9-High-Frequency Trading.md",
+      "lastModified": 1763775967746,
+      "embeddingGenerated": 1764031541716,
+      "status": "modified"
+    },
+    "IEOR198/3-Getting Risky.md": {
+      "path": "IEOR198/3-Getting Risky.md",
+      "lastModified": 1758936678635,
+      "embeddingGenerated": 1764031541785,
+      "status": "modified"
+    },
+    "IEOR198/7-Portfolio Optimization, Stat Arb, Regression.md": {
+      "path": "IEOR198/7-Portfolio Optimization, Stat Arb, Regression.md",
+      "lastModified": 1762566803602,
+      "embeddingGenerated": 1764031541975,
+      "status": "modified"
+    },
+    "IEOR198/8-Optiver HoT Talk.md": {
+      "path": "IEOR198/8-Optiver HoT Talk.md",
+      "lastModified": 1763236758292,
+      "embeddingGenerated": 1764031542037,
+      "status": "modified"
+    },
+    "IEOR198/6-Discovering Trade Ideas.md": {
+      "path": "IEOR198/6-Discovering Trade Ideas.md",
+      "lastModified": 1760748484254,
+      "embeddingGenerated": 1764031542085,
+      "status": "modified"
+    },
+    "IEOR198/5-Options.md": {
+      "path": "IEOR198/5-Options.md",
+      "lastModified": 1760147260049,
+      "embeddingGenerated": 1764031542129,
+      "status": "modified"
+    },
+    "IEOR198/4-Execute Execute Execute.md": {
+      "path": "IEOR198/4-Execute Execute Execute.md",
+      "lastModified": 1763539474711,
+      "embeddingGenerated": 1764031542206,
+      "status": "modified"
+    },
+    "IEOR198/2-Fairs.md": {
+      "path": "IEOR198/2-Fairs.md",
+      "lastModified": 1758330516721,
+      "embeddingGenerated": 1764031542309,
+      "status": "modified"
+    },
+    "IEOR198/1-Let's make a market.md": {
+      "path": "IEOR198/1-Let's make a market.md",
+      "lastModified": 1759538214932,
+      "embeddingGenerated": 1764031542380,
+      "status": "modified"
+    },
+    "home.md": {
+      "path": "home.md",
+      "lastModified": 1754682382188,
+      "embeddingGenerated": 1764031542459,
+      "status": "modified"
+    },
+    "iOS dev/3-closure, dataflow, lists.md": {
+      "path": "iOS dev/3-closure, dataflow, lists.md",
+      "lastModified": 1758571087792,
+      "embeddingGenerated": 1764031542538,
+      "status": "modified"
+    },
+    "iOS dev/1-motivation, git & swift.md": {
+      "path": "iOS dev/1-motivation, git & swift.md",
+      "lastModified": 1757702776346,
+      "embeddingGenerated": 1764031542617,
+      "status": "modified"
+    },
+    "EECS16A/4-Fourier Analysis.md": {
+      "path": "EECS16A/4-Fourier Analysis.md",
+      "lastModified": 1762030671425,
+      "embeddingGenerated": 1764031542699,
+      "status": "modified"
+    },
+    "EECS16A/1-Vector Space, Subspace.md": {
+      "path": "EECS16A/1-Vector Space, Subspace.md",
+      "lastModified": 1762036201229,
+      "embeddingGenerated": 1764031542762,
+      "status": "modified"
+    },
+    "EECS16A/7-Least Squares, Graphs, Page Rank.md": {
+      "path": "EECS16A/7-Least Squares, Graphs, Page Rank.md",
+      "lastModified": 1762030664673,
+      "embeddingGenerated": 1764031542859,
+      "status": "modified"
+    },
+    "EECS16A/5-DTFS.md": {
+      "path": "EECS16A/5-DTFS.md",
+      "lastModified": 1762224224611,
+      "embeddingGenerated": 1764031542941,
+      "status": "modified"
+    },
+    "EECS16A/6-QR Factorization, Gram-Schmidt.md": {
+      "path": "EECS16A/6-QR Factorization, Gram-Schmidt.md",
+      "lastModified": 1762224234237,
+      "embeddingGenerated": 1764031542989,
+      "status": "modified"
+    },
+    "EECS16A/3-Complex exponentials, prep for Fourier analysis.md": {
+      "path": "EECS16A/3-Complex exponentials, prep for Fourier analysis.md",
+      "lastModified": 1762030675373,
+      "embeddingGenerated": 1764031543061,
+      "status": "modified"
+    },
+    "EECS16A/2-Norms, Distance, Inner Products, Angles.md": {
+      "path": "EECS16A/2-Norms, Distance, Inner Products, Angles.md",
+      "lastModified": 1762030678635,
+      "embeddingGenerated": 1764031543141,
+      "status": "modified"
+    },
+    "EECS16A/10-SVD, Symmetric Matrices.md": {
+      "path": "EECS16A/10-SVD, Symmetric Matrices.md",
+      "lastModified": 1762224198832,
+      "embeddingGenerated": 1764031543220,
+      "status": "modified"
+    },
+    "EECS16A/0-Course Introduction.md": {
+      "path": "EECS16A/0-Course Introduction.md",
+      "lastModified": 1756625376217,
+      "embeddingGenerated": 1764031543260,
+      "status": "modified"
+    },
+    "PAIR/no longer a child waiting for the santa claus magic - to be a returner.md": {
+      "path": "PAIR/no longer a child waiting for the santa claus magic - to be a returner.md",
+      "lastModified": 1754667389506,
+      "embeddingGenerated": 1764031543343,
+      "status": "modified"
+    },
+    "PAIR/probabilistic method (but not really).md": {
+      "path": "PAIR/probabilistic method (but not really).md",
+      "lastModified": 1755558691427,
+      "embeddingGenerated": 1764031543416,
+      "status": "modified"
+    },
+    "PAIR/hamming circle.md": {
+      "path": "PAIR/hamming circle.md",
+      "lastModified": 1754405497309,
+      "embeddingGenerated": 1764031543483,
+      "status": "modified"
+    },
+    "PAIR/pair mid-reflection.md": {
+      "path": "PAIR/pair mid-reflection.md",
+      "lastModified": 1755558554277,
+      "embeddingGenerated": 1764031543549,
+      "status": "modified"
+    },
+    "PAIR/economics of synthetic cognitive labor.md": {
+      "path": "PAIR/economics of synthetic cognitive labor.md",
+      "lastModified": 1755558764310,
+      "embeddingGenerated": 1764031543605,
+      "status": "modified"
+    },
+    "PAIR/opening the black box.md": {
+      "path": "PAIR/opening the black box.md",
+      "lastModified": 1755558706177,
+      "embeddingGenerated": 1764031543681,
+      "status": "modified"
+    },
+    "PAIR/creation day nice ideas.md": {
+      "path": "PAIR/creation day nice ideas.md",
+      "lastModified": 1755558815700,
+      "embeddingGenerated": 1764031543761,
+      "status": "modified"
+    },
+    "PAIR/diffusion model.md": {
+      "path": "PAIR/diffusion model.md",
+      "lastModified": 1754210217207,
+      "embeddingGenerated": 1764031543841,
+      "status": "modified"
+    },
+    "PAIR/\"history\".md": {
+      "path": "PAIR/\"history\".md",
+      "lastModified": 1754309007978,
+      "embeddingGenerated": 1764031543877,
+      "status": "modified"
+    },
+    "PAIR/creation (or evolution) day - quest day version 2.md": {
+      "path": "PAIR/creation (or evolution) day - quest day version 2.md",
+      "lastModified": 1755558821482,
+      "embeddingGenerated": 1764031543955,
+      "status": "modified"
+    },
+    "PAIR/Network Modeling.md": {
+      "path": "PAIR/Network Modeling.md",
+      "lastModified": 1754390373905,
+      "embeddingGenerated": 1764031544029,
+      "status": "modified"
+    },
+    "PAIR/complexity theory.md": {
+      "path": "PAIR/complexity theory.md",
+      "lastModified": 1754386398885,
+      "embeddingGenerated": 1764031544072,
+      "status": "modified"
+    },
+    "PAIR/brain.md": {
+      "path": "PAIR/brain.md",
+      "lastModified": 1755558864098,
+      "embeddingGenerated": 1764031544125,
+      "status": "modified"
+    },
+    "PAIR/algorithm prisoner's dilemma.md": {
+      "path": "PAIR/algorithm prisoner's dilemma.md",
+      "lastModified": 1754136954890,
+      "embeddingGenerated": 1764031544206,
+      "status": "modified"
+    },
+    "PAIR/Inner Sim.md": {
+      "path": "PAIR/Inner Sim.md",
+      "lastModified": 1754500321292,
+      "embeddingGenerated": 1764031544291,
+      "status": "modified"
+    },
+    "Non-Trivial/take AI welfare seriously.md": {
+      "path": "Non-Trivial/take AI welfare seriously.md",
+      "lastModified": 1743250252000,
+      "embeddingGenerated": 1764031544383,
+      "status": "modified"
+    },
+    "Non-Trivial/EEG-Based Classification of Spoken Words Using Machine Learning Approaches.md": {
+      "path": "Non-Trivial/EEG-Based Classification of Spoken Words Using Machine Learning Approaches.md",
+      "lastModified": 1744464326000,
+      "embeddingGenerated": 1764031544466,
+      "status": "modified"
+    },
+    "Non-Trivial/Aphasia recovery by language training using a brain–computer interface a proof-of-concept study.md": {
+      "path": "Non-Trivial/Aphasia recovery by language training using a brain–computer interface a proof-of-concept study.md",
+      "lastModified": 1744428076000,
+      "embeddingGenerated": 1764031544537,
+      "status": "modified"
+    },
+    "Non-Trivial/A Systematic Review of Using Deep Learning in Aphasia - Challenges and Future Directions.md": {
+      "path": "Non-Trivial/A Systematic Review of Using Deep Learning in Aphasia - Challenges and Future Directions.md",
+      "lastModified": 1744118233000,
+      "embeddingGenerated": 1764031544576,
+      "status": "modified"
+    },
+    "Neural Networks and Deep Learning/1-Hand-Writing Digits Recognition.md": {
+      "path": "Neural Networks and Deep Learning/1-Hand-Writing Digits Recognition.md",
+      "lastModified": 1741662088000,
+      "embeddingGenerated": 1764031544618,
+      "status": "modified"
+    },
+    "Machine Learning with Python - from Linear Models to Deep Learning/0-Brief Overview.md": {
+      "path": "Machine Learning with Python - from Linear Models to Deep Learning/0-Brief Overview.md",
+      "lastModified": 1738342670000,
+      "embeddingGenerated": 1764031544659,
+      "status": "modified"
+    },
+    "Neighborhood/React and Next.js.md": {
+      "path": "Neighborhood/React and Next.js.md",
+      "lastModified": 1746751155274,
+      "embeddingGenerated": 1764031544737,
+      "status": "modified"
+    },
+    "Linear Algebra/Inverse Matrices.md": {
+      "path": "Linear Algebra/Inverse Matrices.md",
+      "lastModified": 1736920568000,
+      "embeddingGenerated": 1764031544812,
+      "status": "modified"
+    },
+    "Linear Algebra/Matrix Operation.md": {
+      "path": "Linear Algebra/Matrix Operation.md",
+      "lastModified": 1736920144000,
+      "embeddingGenerated": 1764031545059,
+      "status": "modified"
+    },
+    "Linear Algebra/1806/README.md": {
+      "path": "Linear Algebra/1806/README.md",
+      "lastModified": 1737015786000,
+      "embeddingGenerated": 1764031545148,
+      "status": "modified"
+    },
+    "MATH191/1-Problem Solving.md": {
+      "path": "MATH191/1-Problem Solving.md",
+      "lastModified": 1757119438959,
+      "embeddingGenerated": 1764031545203,
+      "status": "modified"
+    },
+    "MATH191/field trip to evans 60 bowen lecture.md": {
+      "path": "MATH191/field trip to evans 60 bowen lecture.md",
+      "lastModified": 1760723324612,
+      "embeddingGenerated": 1764031545286,
+      "status": "modified"
+    },
+    "Chemistry/IB review.md": {
+      "path": "Chemistry/IB review.md",
+      "lastModified": 1747590287722,
+      "embeddingGenerated": 1764031545355,
+      "status": "modified"
+    },
+    "HackMIT Blueprint/4-Databases and Deployment.md": {
+      "path": "HackMIT Blueprint/4-Databases and Deployment.md",
+      "lastModified": 1740869551000,
+      "embeddingGenerated": 1764031545505,
+      "status": "modified"
+    },
+    "HackMIT Blueprint/3-Workshop 3.md": {
+      "path": "HackMIT Blueprint/3-Workshop 3.md",
+      "lastModified": 1740861535000,
+      "embeddingGenerated": 1764031545553,
+      "status": "modified"
+    },
+    "HackMIT Blueprint/2-Advanced Web Dev Workshop 2.md": {
+      "path": "HackMIT Blueprint/2-Advanced Web Dev Workshop 2.md",
+      "lastModified": 1740859621000,
+      "embeddingGenerated": 1764031545650,
+      "status": "modified"
+    },
+    "HackMIT Blueprint/1-Advanced Web Dev Workshop 1.md": {
+      "path": "HackMIT Blueprint/1-Advanced Web Dev Workshop 1.md",
+      "lastModified": 1740845182000,
+      "embeddingGenerated": 1764031545691,
+      "status": "modified"
+    },
+    "HackMIT Blueprint/0-Git.md": {
+      "path": "HackMIT Blueprint/0-Git.md",
+      "lastModified": 1740798164000,
+      "embeddingGenerated": 1764031545775,
+      "status": "modified"
+    },
+    "CS70/2-Stable Matching Problem & Graph Theory.md": {
+      "path": "CS70/2-Stable Matching Problem & Graph Theory.md",
+      "lastModified": 1758412893860,
+      "embeddingGenerated": 1764031545816,
+      "status": "modified"
+    },
+    "CS70/3-Graph and Modular Arithmetic.md": {
+      "path": "CS70/3-Graph and Modular Arithmetic.md",
+      "lastModified": 1758260150835,
+      "embeddingGenerated": 1764031545860,
+      "status": "modified"
+    },
+    "CS70/1-Proof.md": {
+      "path": "CS70/1-Proof.md",
+      "lastModified": 1757152293018,
+      "embeddingGenerated": 1764031545936,
+      "status": "modified"
+    },
+    "CS70/0-first lecture.md": {
+      "path": "CS70/0-first lecture.md",
+      "lastModified": 1756625308734,
+      "embeddingGenerated": 1764031546019,
+      "status": "modified"
+    },
+    "CS70/0-Introduction, Propositional Logic.md": {
+      "path": "CS70/0-Introduction, Propositional Logic.md",
+      "lastModified": 1744788991000,
+      "embeddingGenerated": 1764031546097,
+      "status": "modified"
+    },
+    "Economics/IB FINAL Review.md": {
+      "path": "Economics/IB FINAL Review.md",
+      "lastModified": 1756347161927,
+      "embeddingGenerated": 1764031546142,
+      "status": "modified"
+    },
+    "CS198 Deep Learning for Visual Data/1-Introduction.md": {
+      "path": "CS198 Deep Learning for Visual Data/1-Introduction.md",
+      "lastModified": 1757643830430,
+      "embeddingGenerated": 1764031546221,
+      "status": "modified"
+    },
+    "CS61A/9-Inheritance, Representations, Composition.md": {
+      "path": "CS61A/9-Inheritance, Representations, Composition.md",
+      "lastModified": 1760734837258,
+      "embeddingGenerated": 1764031546270,
+      "status": "modified"
+    },
+    "CS61A/5-recursive functions, tree recursions.md": {
+      "path": "CS61A/5-recursive functions, tree recursions.md",
+      "lastModified": 1762025039223,
+      "embeddingGenerated": 1764031546355,
+      "status": "modified"
+    },
+    "CS61A/8-Generator, Objects, Attributes.md": {
+      "path": "CS61A/8-Generator, Objects, Attributes.md",
+      "lastModified": 1760386612828,
+      "embeddingGenerated": 1764031546406,
+      "status": "modified"
+    },
+    "CS61A/6-Lists, Sequences, Containers, Data Abstraction.md": {
+      "path": "CS61A/6-Lists, Sequences, Containers, Data Abstraction.md",
+      "lastModified": 1762025043992,
+      "embeddingGenerated": 1764031546454,
+      "status": "modified"
+    },
+    "CS61A/4-Environments, Functional.md": {
+      "path": "CS61A/4-Environments, Functional.md",
+      "lastModified": 1762025035750,
+      "embeddingGenerated": 1764031546537,
+      "status": "modified"
+    },
+    "CS61A/7-Trees, Mutability, Iterators.md": {
+      "path": "CS61A/7-Trees, Mutability, Iterators.md",
+      "lastModified": 1762025049213,
+      "embeddingGenerated": 1764031546589,
+      "status": "modified"
+    },
+    "CS61A/3-Control.md": {
+      "path": "CS61A/3-Control.md",
+      "lastModified": 1762025014577,
+      "embeddingGenerated": 1764031546643,
+      "status": "modified"
+    },
+    "CS61A/2-Functions (give things names and drawing pictured).md": {
+      "path": "CS61A/2-Functions (give things names and drawing pictured).md",
+      "lastModified": 1762025010633,
+      "embeddingGenerated": 1764031546725,
+      "status": "modified"
+    },
+    "CS61A/14-SQL.md": {
+      "path": "CS61A/14-SQL.md",
+      "lastModified": 1763762369645,
+      "embeddingGenerated": 1764031546809,
+      "status": "modified"
+    },
+    "CS61A/13-Interpreters, Programs as Data, Macros.md": {
+      "path": "CS61A/13-Interpreters, Programs as Data, Macros.md",
+      "lastModified": 1763543816984,
+      "embeddingGenerated": 1764031546883,
+      "status": "modified"
+    },
+    "CS61A/12-Scheme.md": {
+      "path": "CS61A/12-Scheme.md",
+      "lastModified": 1762462821522,
+      "embeddingGenerated": 1764031546928,
+      "status": "modified"
+    },
+    "CS61A/11-Concurrency, (un)ethical computing.md": {
+      "path": "CS61A/11-Concurrency, (un)ethical computing.md",
+      "lastModified": 1761944254213,
+      "embeddingGenerated": 1764031547010,
+      "status": "modified"
+    },
+    "CS61A/10-Efficiency, Decomposition.md": {
+      "path": "CS61A/10-Efficiency, Decomposition.md",
+      "lastModified": 1761166529622,
+      "embeddingGenerated": 1764031547103,
+      "status": "modified"
+    },
+    "CS61A/1-Call Expression.md": {
+      "path": "CS61A/1-Call Expression.md",
+      "lastModified": 1762025003346,
+      "embeddingGenerated": 1764031547176,
+      "status": "modified"
+    },
+    "CS61A/(unreal) 1-Functions.md": {
+      "path": "CS61A/(unreal) 1-Functions.md",
+      "lastModified": 1762024999111,
+      "embeddingGenerated": 1764031547249,
+      "status": "modified"
+    },
+    "CS50 Web/4-SQL, Models and Migrations.md": {
+      "path": "CS50 Web/4-SQL, Models and Migrations.md",
+      "lastModified": 1762204860522,
+      "embeddingGenerated": 1764031547325,
+      "status": "modified"
+    },
+    "CS50 Web/5-JavaScript.md": {
+      "path": "CS50 Web/5-JavaScript.md",
+      "lastModified": 1762204868702,
+      "embeddingGenerated": 1764031547419,
+      "status": "modified"
+    },
+    "CS50 Web/3-Django.md": {
+      "path": "CS50 Web/3-Django.md",
+      "lastModified": 1762204853786,
+      "embeddingGenerated": 1764031547508,
+      "status": "modified"
+    },
+    "CS50 Web/2-Python.md": {
+      "path": "CS50 Web/2-Python.md",
+      "lastModified": 1762204840278,
+      "embeddingGenerated": 1764031547602,
+      "status": "modified"
+    },
+    "CS50 Web/1-Git.md": {
+      "path": "CS50 Web/1-Git.md",
+      "lastModified": 1762204834137,
+      "embeddingGenerated": 1764031547702,
+      "status": "modified"
+    },
+    "CS50 Web/0-HTML, CSS.md": {
+      "path": "CS50 Web/0-HTML, CSS.md",
+      "lastModified": 1762204824779,
+      "embeddingGenerated": 1764031547779,
+      "status": "modified"
+    },
+    "CS50/1.2-Command Lines.md": {
+      "path": "CS50/1.2-Command Lines.md",
+      "lastModified": 1740506669000,
+      "embeddingGenerated": 1764031547827,
+      "status": "modified"
+    },
+    "CS50/1.3-Preprocessor Directive.md": {
+      "path": "CS50/1.3-Preprocessor Directive.md",
+      "lastModified": 1740506673000,
+      "embeddingGenerated": 1764031547899,
+      "status": "modified"
+    },
+    "CS50/9-Flask.md": {
+      "path": "CS50/9-Flask.md",
+      "lastModified": 1744771258000,
+      "embeddingGenerated": 1764031547978,
+      "status": "modified"
+    },
+    "CS50/8-HTML, CSS, JavaScript.md": {
+      "path": "CS50/8-HTML, CSS, JavaScript.md",
+      "lastModified": 1741227570000,
+      "embeddingGenerated": 1764031548070,
+      "status": "modified"
+    },
+    "CS50/6-Python.md": {
+      "path": "CS50/6-Python.md",
+      "lastModified": 1740506603000,
+      "embeddingGenerated": 1764031548165,
+      "status": "modified"
+    },
+    "CS50/7-SQL.md": {
+      "path": "CS50/7-SQL.md",
+      "lastModified": 1740506626000,
+      "embeddingGenerated": 1764031548239,
+      "status": "modified"
+    },
+    "CS50/5.5-Tries.md": {
+      "path": "CS50/5.5-Tries.md",
+      "lastModified": 1740506732000,
+      "embeddingGenerated": 1764031548361,
+      "status": "modified"
+    },
+    "CS50/1-C.md": {
+      "path": "CS50/1-C.md",
+      "lastModified": 1740506657000,
+      "embeddingGenerated": 1764031548413,
+      "status": "modified"
+    },
+    "CS50/5.4-Hash Tables.md": {
+      "path": "CS50/5.4-Hash Tables.md",
+      "lastModified": 1740506729000,
+      "embeddingGenerated": 1764031548501,
+      "status": "modified"
+    },
+    "CS50/5.3-Doubly-Linked Lists.md": {
+      "path": "CS50/5.3-Doubly-Linked Lists.md",
+      "lastModified": 1740506726000,
+      "embeddingGenerated": 1764031548575,
+      "status": "modified"
+    },
+    "CS50/5.2-Singly-Linked Lists.md": {
+      "path": "CS50/5.2-Singly-Linked Lists.md",
+      "lastModified": 1740506720000,
+      "embeddingGenerated": 1764031548646,
+      "status": "modified"
+    },
+    "CS50/5.1-Structures.md": {
+      "path": "CS50/5.1-Structures.md",
+      "lastModified": 1740506716000,
+      "embeddingGenerated": 1764031548724,
+      "status": "modified"
+    },
+    "CS50/5-Data Structures.md": {
+      "path": "CS50/5-Data Structures.md",
+      "lastModified": 1740506710000,
+      "embeddingGenerated": 1764031548767,
+      "status": "modified"
+    },
+    "CS50/4.4-File Pointers.md": {
+      "path": "CS50/4.4-File Pointers.md",
+      "lastModified": 1740506702000,
+      "embeddingGenerated": 1764031548828,
+      "status": "modified"
+    },
+    "CS50/4.3-Define Custom Types.md": {
+      "path": "CS50/4.3-Define Custom Types.md",
+      "lastModified": 1740506696000,
+      "embeddingGenerated": 1764031548913,
+      "status": "modified"
+    },
+    "CS50/4.2-Pointers.md": {
+      "path": "CS50/4.2-Pointers.md",
+      "lastModified": 1740506693000,
+      "embeddingGenerated": 1764031548980,
+      "status": "modified"
+    },
+    "CS50/4.1-Hexadecimal.md": {
+      "path": "CS50/4.1-Hexadecimal.md",
+      "lastModified": 1740506690000,
+      "embeddingGenerated": 1764031549050,
+      "status": "modified"
+    },
+    "CS50/4-Memory.md": {
+      "path": "CS50/4-Memory.md",
+      "lastModified": 1740506586000,
+      "embeddingGenerated": 1764031549134,
+      "status": "modified"
+    },
+    "CS50/3.1-Call Stacks.md": {
+      "path": "CS50/3.1-Call Stacks.md",
+      "lastModified": 1740506685000,
+      "embeddingGenerated": 1764031549187,
+      "status": "modified"
+    },
+    "CS50/3-Algorithms.md": {
+      "path": "CS50/3-Algorithms.md",
+      "lastModified": 1754261239850,
+      "embeddingGenerated": 1764031549247,
+      "status": "modified"
+    },
+    "CS50/2-Arrays.md": {
+      "path": "CS50/2-Arrays.md",
+      "lastModified": 1740506679000,
+      "embeddingGenerated": 1764031549338,
+      "status": "modified"
+    },
+    "CS50/1.1-Data Types.md": {
+      "path": "CS50/1.1-Data Types.md",
+      "lastModified": 1740506660000,
+      "embeddingGenerated": 1764031549450,
+      "status": "modified"
+    },
+    "CS50/0-Scratch.md": {
+      "path": "CS50/0-Scratch.md",
+      "lastModified": 1736959048000,
+      "embeddingGenerated": 1764031549527,
+      "status": "modified"
+    },
+    "CS229 Machine Learning/2-locally weighted & logistic regression.md": {
+      "path": "CS229 Machine Learning/2-locally weighted & logistic regression.md",
+      "lastModified": 1745411158000,
+      "embeddingGenerated": 1764031549564,
+      "status": "modified"
+    },
+    "CS229 Machine Learning/0-introduction.md": {
+      "path": "CS229 Machine Learning/0-introduction.md",
+      "lastModified": 1742816808000,
+      "embeddingGenerated": 1764031549645,
+      "status": "modified"
+    },
+    "CS229 Machine Learning/1-linear regression and gradient descent.md": {
+      "path": "CS229 Machine Learning/1-linear regression and gradient descent.md",
+      "lastModified": 1757134355002,
+      "embeddingGenerated": 1764031549725,
+      "status": "modified"
+    },
+    "CS50 AI/0-Search.md": {
+      "path": "CS50 AI/0-Search.md",
+      "lastModified": 1762204781634,
+      "embeddingGenerated": 1764031549802,
+      "status": "modified"
+    },
+    "CS50 AI/1-Knowledge.md": {
+      "path": "CS50 AI/1-Knowledge.md",
+      "lastModified": 1762204774752,
+      "embeddingGenerated": 1764031549883,
+      "status": "modified"
+    },
+    "BMT/BMT Week 0.md": {
+      "path": "BMT/BMT Week 0.md",
+      "lastModified": 1756444122662,
+      "embeddingGenerated": 1764031549937,
+      "status": "modified"
+    },
+    "ARENA/0-Fundamentals/Prerequisites.md": {
+      "path": "ARENA/0-Fundamentals/Prerequisites.md",
+      "lastModified": 1754243983028,
+      "embeddingGenerated": 1764031550018,
+      "status": "modified"
+    },
+    "Berkeley/launchpad tech workshop.md": {
+      "path": "Berkeley/launchpad tech workshop.md",
+      "lastModified": 1756959673446,
+      "embeddingGenerated": 1764031550101,
+      "status": "modified"
+    },
+    "Berkeley/tech clubs event.md": {
+      "path": "Berkeley/tech clubs event.md",
+      "lastModified": 1756870320305,
+      "embeddingGenerated": 1764031550175,
+      "status": "modified"
+    },
+    "Berkeley/ml@b tech interview articles.md": {
+      "path": "Berkeley/ml@b tech interview articles.md",
+      "lastModified": 1757205786525,
+      "embeddingGenerated": 1764031550261,
+      "status": "modified"
+    },
+    "Berkeley/ML@B info session.md": {
+      "path": "Berkeley/ML@B info session.md",
+      "lastModified": 1757043923616,
+      "embeddingGenerated": 1764031550351,
+      "status": "modified"
+    },
+    "Berkeley/T@B.md": {
+      "path": "Berkeley/T@B.md",
+      "lastModified": 1757785270300,
+      "embeddingGenerated": 1764031550476,
+      "status": "modified"
+    },
+    "Berkeley/MPS math course SUCCESS workshop.md": {
+      "path": "Berkeley/MPS math course SUCCESS workshop.md",
+      "lastModified": 1756244195991,
+      "embeddingGenerated": 1764031550591,
+      "status": "modified"
+    },
+    "Berkeley/MPS scholars launch day.md": {
+      "path": "Berkeley/MPS scholars launch day.md",
+      "lastModified": 1756229996750,
+      "embeddingGenerated": 1764031550635,
+      "status": "modified"
+    },
+    "Advanced NT/math defs.md": {
+      "path": "Advanced NT/math defs.md",
+      "lastModified": 1753833444152,
+      "embeddingGenerated": 1764031550688,
+      "status": "modified"
+    },
+    "Advanced NT/lecture 7.md": {
+      "path": "Advanced NT/lecture 7.md",
+      "lastModified": 1754010651809,
+      "embeddingGenerated": 1764031550752,
+      "status": "modified"
+    },
+    "Advanced NT/lecture 10.md": {
+      "path": "Advanced NT/lecture 10.md",
+      "lastModified": 1754242752509,
+      "embeddingGenerated": 1764031550811,
+      "status": "modified"
+    },
+    "6.390 Intro to ML/4-Classification.md": {
+      "path": "6.390 Intro to ML/4-Classification.md",
+      "lastModified": 1745227054000,
+      "embeddingGenerated": 1764031550887,
+      "status": "modified"
+    },
+    "0-Templates/Talk.md": {
+      "path": "0-Templates/Talk.md",
+      "lastModified": 1753809637791,
+      "embeddingGenerated": 1764031550936,
+      "status": "modified"
+    },
+    "0-Templates/TuTh Notes.md": {
+      "path": "0-Templates/TuTh Notes.md",
+      "lastModified": 1757557158698,
+      "embeddingGenerated": 1764031550976,
+      "status": "modified"
+    },
+    "0-Templates/Short Extensions & Connections.md": {
+      "path": "0-Templates/Short Extensions & Connections.md",
+      "lastModified": 1754305411964,
+      "embeddingGenerated": 1764031551053,
+      "status": "modified"
+    },
+    "0-Templates/Reading.md": {
+      "path": "0-Templates/Reading.md",
+      "lastModified": 1754305421468,
+      "embeddingGenerated": 1764031551175,
+      "status": "modified"
+    },
+    "0-Templates/MWF Notes.md": {
+      "path": "0-Templates/MWF Notes.md",
+      "lastModified": 1757557170751,
+      "embeddingGenerated": 1764031551244,
+      "status": "modified"
+    },
+    "0-Templates/Full Note.md": {
+      "path": "0-Templates/Full Note.md",
+      "lastModified": 1754305398939,
+      "embeddingGenerated": 1764031551329,
+      "status": "modified"
+    }
+  },
   "embeddings": {}
 }

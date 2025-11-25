@@ -18,7 +18,7 @@ export default class CombinedPlugin extends Plugin {
     embeddingStatusEl: HTMLElement | null = null;
 
     async ensureDataStructure(): Promise<void> {
-        const dataFile = `${this.app.vault.configDir}/plugins/opal/data.json`;
+        const dataFile = `${this.app.vault.configDir}/plugins/graphene/data.json`;
         
         let data = {
             version: '1.0.0',
@@ -131,119 +131,92 @@ export default class CombinedPlugin extends Plugin {
 
     // Update the updateEmbeddingStatusUI method:
 
-    updateEmbeddingStatusUI(): void {
-        if (!this.embeddingStatusEl) return;
+    // ...existing code...
+
+    // ...existing code...
+
+updateEmbeddingStatusUI(): void {
+    if (!this.embeddingStatusEl) return;
+    
+    const stats = this.embeddingService.getEmbeddingStats();
+    
+    this.embeddingStatusEl.empty();
+    
+    const statusContainer = this.embeddingStatusEl.createDiv('embedding-status-container');
+    
+    // Header
+    statusContainer.createEl('h4', { text: 'Embedding Status' });
+    
+    // Progress bar container
+    const progressContainer = statusContainer.createDiv('embedding-progress-container');
+    const progressBar = progressContainer.createDiv('embedding-progress-bar');
+    
+    // Calculate percentages
+    const percentage = stats.total > 0 ? Math.round((stats.upToDate / stats.total) * 100) : 0;
+    
+    if (stats.total > 0) {
+        const upToDateWidth = (stats.upToDate / stats.total) * 100;
+        const modifiedWidth = (stats.modified / stats.total) * 100;
+        const newWidth = (stats.new / stats.total) * 100;
         
-        const stats = this.embeddingService.getEmbeddingStats();
-        
-        this.embeddingStatusEl.empty();
-        
-        const statusContainer = this.embeddingStatusEl.createDiv('embedding-status-container');
-        
-        // Calculate percentages
-        const embeddedFiles = stats.upToDate;
-        const percentage = Math.round((embeddedFiles / stats.total) * 100);
-        const needsUpdate = stats.modified + stats.new;
-        
-        // Status text
-        const statusText = statusContainer.createEl('p', {
-            text: `${embeddedFiles} of ${stats.total} files have embeddings`,
-            cls: 'setting-item-description'
-        });
-        
-        // Add indicator for files needing update
-        if (needsUpdate > 0) {
-            const updateText = needsUpdate === 1 
-                ? '1 file needs update' 
-                : `${needsUpdate} files need update`;
-            
-            statusText.innerHTML += ` <span class="embedding-status-warning">(${updateText})</span>`;
+        // Up to date segment (accent color)
+        if (stats.upToDate > 0) {
+            const upToDateSegment = progressBar.createDiv('progress-segment progress-accent');
+            upToDateSegment.style.width = `${upToDateWidth}%`;
         }
         
-        // Progress bar
-        const progressBar = statusContainer.createDiv('embedding-progress');
-        const progressFill = progressBar.createDiv('embedding-progress-fill');
-        progressFill.style.width = `${percentage}%`;
-        
-        // Show segments for different statuses
-        if (stats.total > 0) {
-            const upToDateWidth = (stats.upToDate / stats.total) * 100;
-            const modifiedWidth = (stats.modified / stats.total) * 100;
-            const newWidth = (stats.new / stats.total) * 100;
-            
-            progressBar.empty();
-            
-            // Up to date segment (green)
-            if (stats.upToDate > 0) {
-                const upToDateSegment = progressBar.createDiv('progress-segment progress-up-to-date');
-                upToDateSegment.style.width = `${upToDateWidth}%`;
-            }
-            
-            // Modified segment (yellow)
-            if (stats.modified > 0) {
-                const modifiedSegment = progressBar.createDiv('progress-segment progress-modified');
-                modifiedSegment.style.width = `${modifiedWidth}%`;
-            }
-            
-            // New segment (blue)
-            if (stats.new > 0) {
-                const newSegment = progressBar.createDiv('progress-segment progress-new');
-                newSegment.style.width = `${newWidth}%`;
-            }
-        }
-        
-        // Legend
-        if (needsUpdate > 0) {
-            const legend = statusContainer.createDiv('embedding-legend');
-            
-            const legendItems = [];
-            if (stats.upToDate > 0) {
-                legendItems.push(`<span class="legend-item"><span class="legend-color legend-up-to-date"></span>Up to date (${stats.upToDate})</span>`);
-            }
-            if (stats.modified > 0) {
-                legendItems.push(`<span class="legend-item"><span class="legend-color legend-modified"></span>Modified (${stats.modified})</span>`);
-            }
-            if (stats.new > 0) {
-                legendItems.push(`<span class="legend-item"><span class="legend-color legend-new"></span>New (${stats.new})</span>`);
-            }
-            
-            legend.innerHTML = legendItems.join('');
-        }
-        
-        // Update button if needed
-        if (needsUpdate > 0) {
-            const buttonContainer = statusContainer.createDiv('button-container');
-            const updateButton = buttonContainer.createEl('button', {
-                text: `Update ${needsUpdate} files`,
-                cls: 'mod-cta'
-            });
-            
-            updateButton.onclick = async () => {
-                updateButton.disabled = true;
-                updateButton.setText('Updating...');
-                await this.generateEmbeddings(true);
-                updateButton.disabled = false;
-                updateButton.setText('Update complete');
-            };
-        }
-        
-        // Last update time
-        const lastUpdate = this.embeddingService.getLastUpdateTime();
-        if (lastUpdate > 0) {
-            const lastUpdateDate = new Date(lastUpdate);
-            statusContainer.createEl('p', {
-                text: `Last updated: ${lastUpdateDate.toLocaleDateString()} ${lastUpdateDate.toLocaleTimeString()}`,
-                cls: 'setting-item-description embedding-last-update'
-            });
+        // Modified + New segments (gray)
+        const needsUpdateWidth = modifiedWidth + newWidth;
+        if (needsUpdateWidth > 0) {
+            const needsUpdateSegment = progressBar.createDiv('progress-segment progress-gray');
+            needsUpdateSegment.style.width = `${needsUpdateWidth}%`;
         }
     }
+    
+    // Progress percentage text overlay
+    const progressText = progressContainer.createDiv('progress-text');
+    progressText.textContent = `${percentage}% complete`;
+    
+    // Legend
+    const legend = statusContainer.createDiv('embedding-legend');
+    
+    // Up to date legend item
+    const upToDateItem = legend.createDiv('legend-item');
+    upToDateItem.createDiv('legend-color legend-accent');
+    upToDateItem.createSpan({ text: `Up to date (${stats.upToDate})` });
+    
+    // Needs update legend item (combines modified + new)
+    const needsUpdateCount = stats.modified + stats.new;
+    if (needsUpdateCount > 0) {
+        const needsUpdateItem = legend.createDiv('legend-item');
+        needsUpdateItem.createDiv('legend-color legend-gray');
+        needsUpdateItem.createSpan({ text: `Needs update (${needsUpdateCount})` });
+    }
+    
+    // Update button if needed
+    if (stats.modified + stats.new > 0) {
+        const updateButton = statusContainer.createEl('button', {
+            text: 'Update Embeddings',
+            cls: 'mod-cta embedding-update-button'
+        });
+        
+        updateButton.onclick = async () => {
+            updateButton.disabled = true;
+            updateButton.setText('Updating...');
+            await this.generateEmbeddings(true);
+            updateButton.disabled = false;
+            this.updateEmbeddingStatusUI();
+        };
+    }
+}
+
+// ...existing code...
 
     createStatusItem(container: HTMLElement, label: string, count: number, type: string): void {
         const item = container.createDiv(`status-item status-${type}`);
         item.createSpan({ text: label, cls: 'status-label' });
         item.createSpan({ text: count.toString(), cls: 'status-count' });
     }
-
 
     // Better Graph Methods
     async activateView() {
