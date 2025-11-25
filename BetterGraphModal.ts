@@ -169,7 +169,7 @@ export class BetterGraphModal extends Modal {
             .attr('fill', 'var(--text-muted)')
             .attr('d', 'M0,-5L10,0L0,5');
 
-        // Create force simulation with circular layout
+        // Initialize nodes in a better layout
         const centerX = width / 2;
         const centerY = height / 2;
         const radius = Math.min(width, height) * 0.35;
@@ -179,15 +179,32 @@ export class BetterGraphModal extends Modal {
             const angle = (i / this.nodes.length) * 2 * Math.PI;
             node.x = centerX + radius * Math.cos(angle);
             node.y = centerY + radius * Math.sin(angle);
+            node.vx = 0;
+            node.vy = 0;
         });
 
+        // Create better force simulation
         this.simulation = d3.forceSimulation<GraphNode>(this.nodes)
             .force('link', d3.forceLink<GraphNode, GraphLink>(this.links)
                 .id(d => d.id)
-                .distance(this.plugin.settings.linkDistance))
-            .force('charge', d3.forceManyBody().strength(-300))
-            .force('center', d3.forceCenter(centerX, centerY).strength(this.plugin.settings.centerForce))
-            .force('collision', d3.forceCollide().radius(20));
+                .distance(this.plugin.settings.linkDistance)
+                .strength(0.5))
+            .force('charge', d3.forceManyBody()
+                .strength(-this.plugin.settings.repulsionForce)
+                .distanceMax(300))
+            .force('center', d3.forceCenter(centerX, centerY)
+                .strength(this.plugin.settings.centerForce))
+            .force('collision', d3.forceCollide<GraphNode>()
+                .radius(this.plugin.settings.nodeSize + 5)
+                .strength(0.7))
+            .force('x', d3.forceX(centerX).strength(0.01))
+            .force('y', d3.forceY(centerY).strength(0.01));
+
+        // Configure simulation parameters
+        this.simulation
+            .velocityDecay(0.65)
+            .alphaMin(0.001)
+            .alphaDecay(0.02);
 
         // Create links
         const link = g.append('g')
@@ -221,23 +238,23 @@ export class BetterGraphModal extends Modal {
         node.append('text')
             .text(d => d.name)
             .attr('x', 0)
-            .attr('y', -10)
+            .attr('y', -this.plugin.settings.nodeSize - 5)
             .attr('text-anchor', 'middle')
             .attr('class', 'node-label')
             .style('fill', 'var(--text-normal)')
             .style('font-size', '12px');
 
         // Add hover effects
-        node.on('mouseenter', function() {
+        node.on('mouseenter', function(event, d) {
             d3.select(this).select('circle')
                 .transition()
                 .duration(200)
-                .attr('r', 8);
-        }).on('mouseleave', function() {
+                .attr('r', 15);
+        }).on('mouseleave', function(event, d) {
             d3.select(this).select('circle')
                 .transition()
                 .duration(200)
-                .attr('r', 5);
+                .attr('r', 12);
         });
 
         // Handle node clicks
@@ -253,10 +270,10 @@ export class BetterGraphModal extends Modal {
         // Update positions on tick
         this.simulation.on('tick', () => {
             link
-                .attr('x1', d => ((d.source as unknown) as GraphNode).x!)
-                .attr('y1', d => ((d.source as unknown) as GraphNode).y!)
-                .attr('x2', d => ((d.target as unknown) as GraphNode).x!)
-                .attr('y2', d => ((d.target as unknown) as GraphNode).y!);
+                .attr('x1', d => (d.source as any).x!)
+                .attr('y1', d => (d.source as any).y!)
+                .attr('x2', d => (d.target as any).x!)
+                .attr('y2', d => (d.target as any).y!);
 
             node.attr('transform', d => `translate(${d.x},${d.y})`);
         });
@@ -266,32 +283,48 @@ export class BetterGraphModal extends Modal {
         return d3.drag<SVGGElement, GraphNode>()
             .on('start', (event, d) => {
                 if (!event.active) this.simulation.alphaTarget(0.3).restart();
-                d.vx = d.x;
-                d.vy = d.y;
+                d.fx = d.x;
+                d.fy = d.y;
             })
             .on('drag', (event, d) => {
-                d.vx = event.x;
-                d.vy = event.y;
+                d.fx = event.x;
+                d.fy = event.y;
             })
             .on('end', (event, d) => {
                 if (!event.active) this.simulation.alphaTarget(0);
-                d.vx = 0;
-                d.vy = 0;
+                // Optional: uncomment to release fixed position after drag
+                // d.fx = null;
+                // d.fy = null;
             });
-    }
-
-    updateLinkThickness(linkId: string, thickness: number) {
-        this.svg.selectAll('.graph-link')
-            .filter((d: any) => d.id === linkId)
-            .attr('stroke-width', thickness);
     }
 
     centerGraph() {
         const width = this.svg.node()!.clientWidth;
         const height = this.svg.node()!.clientHeight;
         
+        // Get current transform
+        const currentTransform = d3.zoomTransform(this.svg.node()!);
+        
+        // Reset positions
+        this.simulation.nodes().forEach(node => {
+            node.fx = null;
+            node.fy = null;
+        });
+        
+        // Update center force
         this.simulation.force('center', d3.forceCenter(width / 2, height / 2).strength(0.5));
-        this.simulation.alpha(0.3).restart();
+        this.simulation.alpha(0.5).restart();
+        
+        // Gradually reduce center force
+        setTimeout(() => {
+            this.simulation.force('center', d3.forceCenter(width / 2, height / 2).strength(this.plugin.settings.centerForce));
+        }, 1000);
+    }
+
+    updateLinkThickness(linkId: string, thickness: number) {
+        this.svg.selectAll('.graph-link')
+            .filter((d: any) => d.id === linkId)
+            .attr('stroke-width', thickness);
     }
 
     resetZoom() {

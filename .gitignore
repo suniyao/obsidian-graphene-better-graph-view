@@ -21,5 +21,5 @@ data.json
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
 
-
+embedding-cache.json
 personal_shit.txt

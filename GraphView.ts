@@ -1,20 +1,28 @@
-import { ItemView, WorkspaceLeaf, TFile } from 'obsidian';
-import type BetterGraphPlugin from './main';
+import { ItemView, WorkspaceLeaf, TFile, setIcon } from 'obsidian';
 import { GraphRenderer } from './GraphRenderer';
 import { GraphControls } from './GraphControls';
 import { GraphNode, GraphLink } from './types';
+import CombinedPlugin from './main';
 
 export const VIEW_TYPE_GRAPH = "better-graph-view";
 
 export class BetterGraphView extends ItemView {
-    plugin: BetterGraphPlugin;
+    plugin: CombinedPlugin;
     renderer: GraphRenderer;
     controls: GraphControls;
     nodes: GraphNode[] = [];
     links: GraphLink[] = [];
     container: HTMLElement;
 
-    constructor(leaf: WorkspaceLeaf, plugin: BetterGraphPlugin) {
+    filters = {
+        showTags: false,
+        showAttachments: false,
+        existingFilesOnly: true,
+        showOrphans: true,
+        searchQuery: ''
+    };
+
+    constructor(leaf: WorkspaceLeaf, plugin: CombinedPlugin) {
         super(leaf);
         this.plugin = plugin;
     }
@@ -31,88 +39,236 @@ export class BetterGraphView extends ItemView {
         return "dot-network";
     }
 
-    async onOpen() {
-        const { contentEl } = this;
-        contentEl.empty();
-        contentEl.addClass('better-graph-view-container');
+// In the onOpen() method, update the control panel creation:
+// In the onOpen() method:
 
-        // Create main container
-        this.container = contentEl.createDiv('graph-main-container');
+async onOpen() {
+    const container = this.containerEl.children[1];
+    container.empty();
+    container.addClass('better-graph-view');
+    
+    // Create main container
+    const mainContainer = container.createDiv('graph-main-container');
+    
+    // Create graph container
+    const graphContainer = mainContainer.createDiv('graph-container');
+    
+    // Create floating control panel button
+    const controlButton = mainContainer.createDiv('graph-control-button');
+    setIcon(controlButton, 'settings');
+    
+    // Create control panel (hidden by default)
+    const controlPanel = mainContainer.createDiv('graph-control-panel');
+    controlPanel.style.display = 'none';
+    
+    // Add control panel header
+    const controlHeader = controlPanel.createDiv('control-panel-header');
+    controlHeader.createSpan({ text: 'Graph Controls', cls: 'control-panel-title' });
+    const closeButton = controlHeader.createDiv('control-panel-close');
+    setIcon(closeButton, 'x');
+    
+    // Create controls container
+    const controlsContainer = controlPanel.createDiv('controls-container');
+    this.controls = new GraphControls(controlsContainer, this.plugin, this);
+    
+    // Toggle control panel on button click
+    controlButton.addEventListener('click', () => {
+        if (controlPanel.style.display === 'none') {
+            controlPanel.style.display = 'flex';
+            controlButton.style.display = 'none';
+        }
+    });
+    
+    // Close control panel on X click
+    closeButton.addEventListener('click', () => {
+        controlPanel.style.display = 'none';
+        controlButton.style.display = 'flex';
+    });
+    
+    // Initialize renderer
+    this.renderer = new GraphRenderer(graphContainer, this.plugin, this);
+    
+    // Load initial data
+    await this.loadGraphData();
+    
+    // Initialize the graph
+    this.renderer.initialize(this.nodes, this.links);
+}
+    
+async loadGraphData() {
+    const files = this.app.vault.getMarkdownFiles();
+    const nodeMap = new Map<string, GraphNode>();
+    const tagNodes = new Map<string, GraphNode>();
+    const tagConnectionCount = new Map<string, number>();
+    
+    // Create nodes for files
+    for (const file of files) {
+        const embedding = await this.plugin.getEmbeddingLocally(file.path);
+        const fileStatus = this.plugin.embeddingService.getFileStatus(file);
         
-        // Create header
-        const header = this.container.createDiv('graph-header');
-        const title = header.createDiv('graph-title');
-        title.createEl('h2', { text: 'Graph View' });
-
-        const settingsBtn = header.createDiv('graph-settings-btn');
-        settingsBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v6m0 6v6m9-9h-6m-6 0H3m16.66-4.66l-4.24 4.24M7.58 7.58L3.34 3.34m16.66 16.66l-4.24-4.24M7.58 16.42l-4.24 4.24"></path></svg>`;
-
-        // Create content wrapper
-        const contentWrapper = this.container.createDiv('graph-content-wrapper');
-
-        // Create graph container
-        const graphContainer = contentWrapper.createDiv('graph-container');
-
-        // Create controls panel (hidden by default)
-        const controlsPanel = contentWrapper.createDiv('graph-controls-panel');
-        controlsPanel.style.display = 'none';
-
-        // Initialize controls
-        this.controls = new GraphControls(controlsPanel, this.plugin, this);
-
-        // Toggle settings panel
-        settingsBtn.addEventListener('click', () => {
-            const isVisible = controlsPanel.style.display === 'block';
-            controlsPanel.style.display = isVisible ? 'none' : 'block';
-            settingsBtn.classList.toggle('active', !isVisible);
+        nodeMap.set(file.path, {
+            id: file.path,
+            name: file.basename,
+            path: file.path,
+            x: 0,
+            y: 0,
+            vx: 0,
+            vy: 0,
+            embedding: embedding || undefined,
+            type: 'file' as const,
+            status: fileStatus
         });
-
-        // Initialize renderer with the graph container
-        this.renderer = new GraphRenderer(graphContainer, this.plugin, this);
-
-        // Load graph data
-        await this.loadGraphData();
-
-        // Start rendering
-        this.renderer.initialize(this.nodes, this.links);
-
-        // Handle window resize
-        const resizeHandler = () => {
-            this.renderer.resize();
-        };
-        window.addEventListener('resize', resizeHandler);
-        this.register(() => window.removeEventListener('resize', resizeHandler));
     }
     
-    async loadGraphData() {
-        const files = this.app.vault.getMarkdownFiles();
-        const nodeMap = new Map<string, GraphNode>();
+    // Create nodes for tags if enabled
+    if (this.filters.showTags) {
+        const allTags = new Set<string>();
         
-        // Create nodes
+        // Collect all tags and count connections
         for (const file of files) {
-            const embedding = await this.plugin.getEmbeddingLocally(file.path);
-            nodeMap.set(file.path, {
-                id: file.path,
-                name: file.basename,
-                path: file.path,
+            const cache = this.app.metadataCache.getFileCache(file);
+            
+            if (cache?.tags) {
+                cache.tags.forEach(tag => {
+                    allTags.add(tag.tag);
+                    tagConnectionCount.set(tag.tag, (tagConnectionCount.get(tag.tag) || 0) + 1);
+                });
+            }
+
+            if (cache?.frontmatter) {
+                const aiTags = cache.frontmatter['ai-tags'];
+                if (Array.isArray(aiTags)) {
+                    aiTags.forEach(tag => {
+                        const tagWithHash = `#${tag}`;
+                        allTags.add(tagWithHash);
+                        tagConnectionCount.set(tagWithHash, (tagConnectionCount.get(tagWithHash) || 0) + 1);
+                    });
+                } else if (typeof aiTags === 'string') {
+                    try {
+                        const parsed = JSON.parse(aiTags);
+                        if (Array.isArray(parsed)) {
+                            parsed.forEach(tag => {
+                                const tagWithHash = `#${tag}`;
+                                allTags.add(tagWithHash);
+                                tagConnectionCount.set(tagWithHash, (tagConnectionCount.get(tagWithHash) || 0) + 1);
+                            });
+                        }
+                    } catch {
+                        const tagMatches = aiTags.match(/["']([^"']+)["']/g);
+                        if (tagMatches) {
+                            tagMatches.forEach(match => {
+                                const tag = match.replace(/["']/g, '');
+                                const tagWithHash = `#${tag}`;
+                                allTags.add(tagWithHash);
+                                tagConnectionCount.set(tagWithHash, (tagConnectionCount.get(tagWithHash) || 0) + 1);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Create tag nodes with connection count
+        allTags.forEach(tag => {
+            tagNodes.set(tag, {
+                id: tag,
+                name: tag,
+                path: tag,
                 x: 0,
                 y: 0,
                 vx: 0,
                 vy: 0,
-                embedding: embedding || undefined
+                type: 'tag' as const,
+                connectionCount: tagConnectionCount.get(tag) || 1
+            });
+        });
+    }
+    
+    // Combine all nodes
+    this.nodes = [...Array.from(nodeMap.values()), ...Array.from(tagNodes.values())];
+    console.log('Total nodes:', this.nodes.length, 'Tag nodes:', tagNodes.size);
+    // Create links
+    this.links = [];
+    
+    // Create file-to-file links
+    if (this.plugin.settings.useEmbeddings && this.nodes.some(n => n.embedding)) {
+        await this.createEmbeddingBasedLinks(nodeMap);
+    } else {
+        this.createTraditionalLinks(files, nodeMap);
+    }
+    
+    // Create tag links
+    if (this.filters.showTags) {
+        this.createTagLinks(files, nodeMap, tagNodes);
+        console.log('Tag links created:', this.links.filter(l => l.type === 'tag-link').length);
+    }
+
+    if (this.renderer && this.renderer.isInitialized) {
+        this.renderer.updateData(this.nodes, this.links);
+    }
+}
+
+createTagLinks(files: TFile[], nodeMap: Map<string, GraphNode>, tagNodes: Map<string, GraphNode>) {
+    files.forEach(file => {
+        const cache = this.app.metadataCache.getFileCache(file);
+        const fileNode = nodeMap.get(file.path);
+        
+        if (!fileNode || !cache) return;
+        
+        // Link to regular tags
+        if (cache.tags) {
+            cache.tags.forEach(tag => {
+                const tagNode = tagNodes.get(tag.tag);
+                if (tagNode) {
+                    this.links.push({
+                        source: fileNode.id,
+                        target: tagNode.id,
+                        id: `${fileNode.id}-tag-${tagNode.id}`,
+                        type: 'tag-link' as const
+                    });
+                }
             });
         }
         
-        this.nodes = Array.from(nodeMap.values());
-        
-        // Create links
-        this.links = [];
-        if (this.plugin.settings.useEmbeddings && this.nodes.some(n => n.embedding)) {
-            await this.createEmbeddingBasedLinks(nodeMap);
-        } else {
-            this.createTraditionalLinks(files, nodeMap);
+        // Link to AI-generated tags
+        if (cache.frontmatter?.['ai-tags']) {
+            const aiTags = cache.frontmatter['ai-tags'];
+            
+            let tagList: string[] = [];
+            
+            if (Array.isArray(aiTags)) {
+                tagList = aiTags;
+            } else if (typeof aiTags === 'string') {
+                // Handle string format like "[\"tag1\", \"tag2\"]"
+                try {
+                    const parsed = JSON.parse(aiTags);
+                    if (Array.isArray(parsed)) {
+                        tagList = parsed;
+                    }
+                } catch {
+                    // Try regex parsing for non-JSON strings
+                    const matches = aiTags.match(/["']([^"']+)["']/g);
+                    if (matches) {
+                        tagList = matches.map(m => m.replace(/["']/g, ''));
+                    }
+                }
+            }
+            
+            tagList.forEach(tag => {
+                const tagWithHash = tag.startsWith('#') ? tag : `#${tag}`;
+                const tagNode = tagNodes.get(tagWithHash);
+                if (tagNode) {
+                    this.links.push({
+                        source: fileNode.id,
+                        target: tagNode.id,
+                        id: `${fileNode.id}-ai-tag-${tagNode.id}`,
+                        type: 'tag-link' as const
+                    });
+                }
+            });
         }
-    }
+    });
+}
 
     async createEmbeddingBasedLinks(nodeMap: Map<string, GraphNode>) {
         const nodesArray = Array.from(nodeMap.values());
@@ -173,8 +329,13 @@ export class BetterGraphView extends ItemView {
     }
 
     async refresh() {
+        if (!this.renderer || !this.renderer.isInitialized) {
+            console.warn('Cannot refresh: renderer not initialized');
+            return;
+        }
+        
         await this.loadGraphData();
-        this.renderer.updateData(this.nodes, this.links);
+        // No need to call updateData here since loadGraphData already does it
     }
 
     async onClose() {
