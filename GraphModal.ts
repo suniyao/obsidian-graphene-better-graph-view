@@ -231,8 +231,8 @@ export class BetterGraphModal extends Modal {
         node.append('circle')
             .attr('r', this.plugin.settings.nodeSize)
             .attr('fill', 'var(--text-accent)')
-            .attr('stroke', 'var(--background-primary)')
-            .attr('stroke-width', 2);
+            .attr('stroke', 'none')
+            .attr('stroke-width', 0);
 
         // Add labels to nodes
         node.append('text')

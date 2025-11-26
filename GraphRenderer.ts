@@ -20,6 +20,17 @@ export class GraphRenderer {
     private isAnimating: boolean = true;
     private showArrows: boolean = false;
 
+    // Compute the visual radius of a node, mirroring circle rendering logic
+    private getNodeRadius(node: GraphNode): number {
+        if (node.type === 'tag' && node.connectionCount) {
+            const minSize = this.plugin.settings.nodeSize * 0.8;
+            const maxSize = this.plugin.settings.nodeSize * 2;
+            const scaleFactor = Math.log(node.connectionCount + 1) / Math.log(10);
+            return Math.min(maxSize, minSize + scaleFactor * 10);
+        }
+        return this.plugin.settings.nodeSize;
+    }
+
     constructor(container: HTMLElement, plugin: BetterGraphPlugin, view: BetterGraphView) {
         this.container = container;
         this.plugin = plugin;
@@ -77,26 +88,26 @@ export class GraphRenderer {
         defs.append('marker')
             .attr('id', 'arrow')
             .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 15)  // Reduced from 20
+            .attr('refX', 10)  // Position tip at end of line
             .attr('refY', 0)
-            .attr('markerWidth', 4)  // Reduced from 6
-            .attr('markerHeight', 4)  // Reduced from 6
+            .attr('markerWidth', 4)
+            .attr('markerHeight', 4)
             .attr('orient', 'auto')
             .append('path')
             .attr('fill', 'var(--text-muted)')
-            .attr('d', 'M0,-5L10,0L0,5');
+            .attr('d', 'M0,-3L10,0L0,3Q1.5,0 0,-3Z');  // Acute arrow with concave curved base
 
         defs.append('marker')
             .attr('id', 'arrow-accent')
             .attr('viewBox', '0 -5 10 10')
-            .attr('refX', 15)
+            .attr('refX', 10)  // Position tip at end of line
             .attr('refY', 0)
             .attr('markerWidth', 4)
             .attr('markerHeight', 4)
             .attr('orient', 'auto')
             .append('path')
             .attr('fill', 'var(--interactive-accent)')
-            .attr('d', 'M0,-5L10,0L0,5');
+            .attr('d', 'M0,-3L10,0L0,3Q1.5,0 0,-3Z');  // Acute arrow with concave curved base
     }
 
 private setupLinks() {
@@ -160,8 +171,8 @@ private setupNodes() {
             }
             return 'var(--text-muted)';
         })
-        .attr('stroke', 'var(--background-primary)')
-        .attr('stroke-width', 2)
+    .attr('stroke', 'none')
+    .attr('stroke-width', 0)
         .attr('opacity', 1);
 
         // Add labels
@@ -648,8 +659,8 @@ private setupSimulation() {
         node.append('circle')
             .attr('r', this.plugin.settings.nodeSize)
             .attr('fill', d => d.embedding ? 'var(--interactive-accent)' : 'var(--text-accent)')
-            .attr('stroke', 'var(--background-primary)')
-            .attr('stroke-width', 2);
+            .attr('stroke', 'none')
+            .attr('stroke-width', 0);
 
         // Add labels
         node.append('text')
@@ -690,17 +701,34 @@ private setupSimulation() {
 private ticked() {
     // Update link positions
     const similarityThreshold = this.plugin.settings.similarityThreshold;
+    const getNodeRadius = (n: GraphNode) => this.getNodeRadius(n);
+    const showArrows = this.showArrows;
     this.linkElements.each(function(d: any) {
         const group = d3.select(this);
         const source = d.source as GraphNode;
         const target = d.target as GraphNode;
         
         // Update solid lines
+        const dx = target.x! - source.x!;
+        const dy = target.y! - source.y!;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        const rSource = getNodeRadius(source);
+        const rTarget = getNodeRadius(target);
+        const arrowPad = showArrows ? 6 : 0; // back off a bit more for arrowhead visibility
+        const totalBackoff = Math.min(dist / 2, rSource);
+        const totalForeoff = Math.min(dist / 2, rTarget); // + arrowpad? 
+        const ux = dx / dist;
+        const uy = dy / dist;
+        const x1 = source.x! + ux * totalBackoff;
+        const y1 = source.y! + uy * totalBackoff;
+        const x2 = target.x! - ux * totalForeoff;
+        const y2 = target.y! - uy * totalForeoff;
+
         group.select('line.solid-link')
-            .attr('x1', source.x!)
-            .attr('y1', source.y!)
-            .attr('x2', target.x!)
-            .attr('y2', target.y!);
+            .attr('x1', x1)
+            .attr('y1', y1)
+            .attr('x2', x2)
+            .attr('y2', y2);
         
         // Handle dotted lines for similarity links
         const similarity = group.attr('data-similarity');
