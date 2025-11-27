@@ -33,6 +33,7 @@ export interface BetterGraphSettings {
     minLinkThickness: number;
     maxLinkThickness: number;
     linkThickness: Record<string, number>; // Custom thickness per link
+    dottedLinkThickness: number;
 }
 
 export const DEFAULT_SETTINGS: BetterGraphSettings = {
@@ -65,7 +66,8 @@ export const DEFAULT_SETTINGS: BetterGraphSettings = {
     defaultLinkThickness: 2,
     minLinkThickness: 0.5,
     maxLinkThickness: 8,
-    linkThickness: {}
+    linkThickness: {},
+    dottedLinkThickness: 1.5,
 };
 
 export interface GraphNode extends d3.SimulationNodeDatum {

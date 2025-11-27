@@ -228,14 +228,26 @@ export class CombinedSettingTab extends PluginSettingTab {
         containerEl.createEl('h3', { text: 'Edge Thickness' });
 
         new Setting(containerEl)
-            .setName('Default Edge Thickness')
-            .setDesc('Thickness for traditional edges')
+            .setName('Solid edge thickness')
+            .setDesc('Thickness for manual/tag edges')
             .addSlider(slider => slider
                 .setLimits(0.5, 10, 0.5)
                 .setValue(this.plugin.settings.defaultLinkThickness)
                 .setDynamicTooltip()
                 .onChange(async (value) => {
                     this.plugin.settings.defaultLinkThickness = value;
+                    await this.plugin.saveSettings();
+                }));
+
+        new Setting(containerEl)
+            .setName('Dotted edge size')
+            .setDesc('Dot radius for similarity edges')
+            .addSlider(slider => slider
+                .setLimits(0.5, 4, 0.25)
+                .setValue(this.plugin.settings.dottedLinkThickness ?? Math.max(0.5, this.plugin.settings.defaultLinkThickness / 2))
+                .setDynamicTooltip()
+                .onChange(async (value) => {
+                    this.plugin.settings.dottedLinkThickness = value;
                     await this.plugin.saveSettings();
                 }));
 

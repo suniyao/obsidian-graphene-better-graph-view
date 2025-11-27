@@ -19,6 +19,7 @@ export class GraphRenderer {
     private zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
     private isAnimating: boolean = true;
     private showArrows: boolean = false;
+    private highlightedEdges: Set<string> = new Set();
 
     // Compute the visual radius of a node, mirroring circle rendering logic
     private getNodeRadius(node: GraphNode): number {
@@ -135,7 +136,7 @@ private setupLinks() {
             // Regular solid line for manual links and tag links
             group.append('line')
                 .attr('class', 'link solid-link')
-                .attr('stroke', 'var(--text-muted)')
+                .style('stroke', 'var(--text-muted)')
                 .attr('stroke-opacity', 0.6)
                 .attr('stroke-width', defaultThickness)
                 .attr('marker-end', showArrows ? 'url(#arrow)' : null);
@@ -222,11 +223,14 @@ private setupNodes() {
             }
         });
 
+        // Remember highlighted edges so ticked() can keep dotted links in sync
+        this.highlightedEdges = connectedEdges;
+
         // Update node styling
         this.nodeElements.selectAll('circle')
             .transition()
             .duration(200)
-            .attr('fill', function(d: GraphNode) {
+            .style('fill', function(d: GraphNode) {
                 if (d.id === hoveredNode.id) {
                     return 'var(--text-accent)';
                 } else if (connectedNodeIds.has(d.id)) {
@@ -235,11 +239,11 @@ private setupNodes() {
                     return d.type === 'tag' ? 'var(--text-success)' : 'var(--text-muted)';
                 }
             })
-            .attr('opacity', (d: GraphNode) => {
+            .style('opacity', (d: GraphNode) => {
                 if (d.id === hoveredNode.id || connectedNodeIds.has(d.id)) {
                     return 1;
                 } else {
-                    return 0.3;
+                    return 0.2;
                 }
             });
 
@@ -254,19 +258,19 @@ private setupNodes() {
             const highlight = connectedEdges.has(edgePair);
             
             // Update solid lines (for manual-link and tag-link)
-            group.selectAll('line.solid-link')
+            group.select('line.solid-link')
                 .transition()
                 .duration(200)
-                .attr('stroke', highlight ? 'var(--interactive-accent)' : 'var(--text-muted)')
+                .style('stroke', highlight ? 'var(--interactive-accent)' : 'var(--text-muted)')
                 .attr('stroke-opacity', highlight ? 1 : 0.2)
                 .attr('marker-end', (d: GraphLink) => showArrows2 ? (highlight ? 'url(#arrow-accent)' : 'url(#arrow)') : null);
             
             // Update dots (for similarity links)
-            group.selectAll('circle')
+            group.selectAll('circle.link-dot')
                 .transition()
                 .duration(200)
-                .attr('fill', highlight ? 'var(--interactive-accent)' : 'var(--text-muted)')
-                .attr('opacity', highlight ? 1 : 0.2);
+                .style('fill', highlight ? 'var(--interactive-accent)' : 'var(--text-muted)')
+                .style('opacity', highlight ? 1 : 0.2);
         });
 
         // Update text styling (opacity + size + vertical offset)
@@ -289,24 +293,26 @@ private setupNodes() {
         this.nodeElements.selectAll('circle')
             .transition()
             .duration(200)
-            .attr('fill', (d: GraphNode) => d.type === 'tag' ? 'var(--text-success)' : 'var(--text-muted)')
-            .attr('opacity', 1);
+            .style('fill', (d: GraphNode) => d.type === 'tag' ? 'var(--text-success)' : 'var(--text-muted)')
+            .style('opacity', 1);
+
+        this.highlightedEdges.clear();
 
         // Reset link styling
         this.linkElements.each(function() {
             const group = d3.select(this);
             
-            group.select('line')
+            group.select('line.solid-link')
                 .transition()
                 .duration(200)
-                .attr('stroke', 'var(--text-muted)')
+                .style('stroke', 'var(--text-muted)')
                 .attr('stroke-opacity', 0.6);
             
-            group.selectAll('circle')
+            group.selectAll('circle.link-dot')
                 .transition()
                 .duration(200)
-                .attr('fill', 'var(--text-muted)')
-                .attr('opacity', 0.6);
+                .style('fill', 'var(--text-muted)')
+                .style('opacity', 0.6);
         });
 
         this.nodeElements.selectAll('text')
@@ -517,7 +523,7 @@ private setupSimulation() {
         // Add circles
         node.append('circle')
             .attr('r', this.plugin.settings.nodeSize)
-            .attr('fill', d => d.embedding ? 'var(--interactive-accent)' : 'var(--text-accent)')
+            .style('fill', d => d.embedding ? 'var(--interactive-accent)' : 'var(--text-accent)')
             .attr('stroke', 'none')
             .attr('stroke-width', 0);
 
@@ -562,10 +568,14 @@ private ticked() {
     const similarityThreshold = this.plugin.settings.similarityThreshold;
     const getNodeRadius = (n: GraphNode) => this.getNodeRadius(n);
     const showArrows = this.showArrows;
-    this.linkElements.each(function(d: any) {
-        const group = d3.select(this);
+    this.linkElements.each((d: any, index, groups) => {
+        const group = d3.select(groups[index]);
         const source = d.source as GraphNode;
         const target = d.target as GraphNode;
+        const sourceId = source.id;
+        const targetId = target.id;
+        const edgePair = `${sourceId}|${targetId}`;
+        const highlight = this.highlightedEdges.has(edgePair);
         
         // Update solid lines
         const dx = target.x! - source.x!;
@@ -596,7 +606,8 @@ private ticked() {
             const dx = target.x! - source.x!;
             const dy = target.y! - source.y!;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            const dotRadius = 1.5;
+            const dotRadiusSetting = this.plugin.settings.dottedLinkThickness ?? Math.max(1, this.plugin.settings.defaultLinkThickness / 2);
+            const dotRadius = Math.max(0.5, dotRadiusSetting);
             // Spacing inversely proportional to similarity above threshold: higher similarity = tighter spacing
             const spacing = Math.min(1 / (sim - similarityThreshold), 30); // make it a bit loosen
             
@@ -613,8 +624,8 @@ private ticked() {
                         .attr('cx', source.x! + dx * t)
                         .attr('cy', source.y! + dy * t)
                         .attr('r', dotRadius)
-                        .attr('fill', 'var(--text-muted)')
-                        .attr('opacity', 0.6);
+                        .attr('fill', highlight ? 'var(--interactive-accent)' : 'var(--text-muted)')
+                        .style('opacity', highlight ? 1 : 0.6);
                 }
             }
         }
@@ -708,10 +719,15 @@ updateNodeSize(size: number) {
                 .attr('stroke-width', width);
         });
 
-        // Keep dotted similarity edges visually in sync by scaling their dot radius.
-        const dotRadius = Math.max(1, thickness / 2);
+        // Keep dotted similarity edges visually in sync by scaling their dot radius relative to solid edges when needed.
+        const fallbackDotSize = this.plugin.settings.dottedLinkThickness ?? Math.max(0.5, thickness / 2);
         this.linkElements.selectAll('circle.link-dot')
-            .attr('r', dotRadius);
+            .attr('r', fallbackDotSize);
+    }
+
+    updateDottedLinkSize(size: number) {
+        this.linkElements.selectAll('circle.link-dot')
+            .attr('r', size);
     }
 
     updateLinkForce(strength: number) {
