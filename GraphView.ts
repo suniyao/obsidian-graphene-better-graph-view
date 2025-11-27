@@ -190,11 +190,12 @@ async loadGraphData() {
     // Create links
     this.links = [];
     
-    // Create file-to-file links
+    // Create traditional markdown [[links]] (always)
+    this.createTraditionalLinks(files, nodeMap);
+    
+    // Create embedding-based similarity links (if enabled)
     if (this.plugin.settings.useEmbeddings && this.nodes.some(n => n.embedding)) {
         await this.createEmbeddingBasedLinks(nodeMap);
-    } else {
-        this.createTraditionalLinks(files, nodeMap);
     }
     
     // Create tag links
@@ -273,31 +274,79 @@ createTagLinks(files: TFile[], nodeMap: Map<string, GraphNode>, tagNodes: Map<st
     async createEmbeddingBasedLinks(nodeMap: Map<string, GraphNode>) {
         const nodesArray = Array.from(nodeMap.values());
         
+        // Build a set of existing manual link pairs for quick lookup
+        const manualLinkPairs = new Set<string>();
+        this.links.forEach(link => {
+            if (link.type === 'manual-link') {
+                const sourceId = typeof link.source === 'string' ? link.source : (link.source as GraphNode).id;
+                const targetId = typeof link.target === 'string' ? link.target : (link.target as GraphNode).id;
+                // Store both directions since manual links are directional but similarity is bidirectional
+                manualLinkPairs.add(`${sourceId}|${targetId}`);
+                manualLinkPairs.add(`${targetId}|${sourceId}`);
+            }
+        });
+        
+        // Collect candidate similarities per node to allow pruning
+        const perNodeCandidates: Map<string, { otherId: string; sim: number }[]> = new Map();
+
         for (let i = 0; i < nodesArray.length; i++) {
+            const nodeA = nodesArray[i];
+            if (!nodeA.embedding) continue;
             for (let j = i + 1; j < nodesArray.length; j++) {
-                const nodeA = nodesArray[i];
                 const nodeB = nodesArray[j];
-                
-                if (nodeA.embedding && nodeB.embedding) {
-                    const similarity = this.plugin.embeddingService.calculateCosineSimilarity(
-                        nodeA.embedding, 
-                        nodeB.embedding
-                    );
-                    
-                    if (similarity >= this.plugin.settings.similarityThreshold) {
-                        const linkId = `${nodeA.id}<->${nodeB.id}`;
-                        
-                        this.links.push({
-                            source: nodeA.id,
-                            target: nodeB.id,
-                            id: linkId,
-                            similarity: similarity,
-                            thickness: this.calculateThicknessFromSimilarity(similarity)
-                        });
-                    }
+                if (!nodeB.embedding) continue;
+                // Skip if manual link already exists between these nodes
+                if (manualLinkPairs.has(`${nodeA.id}|${nodeB.id}`)) continue;
+                const similarity = this.plugin.embeddingService.calculateCosineSimilarity(nodeA.embedding, nodeB.embedding);
+                if (similarity >= this.plugin.settings.similarityThreshold) {
+                    if (!perNodeCandidates.has(nodeA.id)) perNodeCandidates.set(nodeA.id, []);
+                    if (!perNodeCandidates.has(nodeB.id)) perNodeCandidates.set(nodeB.id, []);
+                    perNodeCandidates.get(nodeA.id)!.push({ otherId: nodeB.id, sim: similarity });
+                    perNodeCandidates.get(nodeB.id)!.push({ otherId: nodeA.id, sim: similarity });
                 }
             }
         }
+
+        const maxLinks = this.plugin.settings.maxSimilarLinksPerNode || 0;
+        const useDynamic = this.plugin.settings.dynamicSimilarityPruning || false;
+        const addedPairs = new Set<string>();
+
+        perNodeCandidates.forEach((candidates, nodeId) => {
+            if (candidates.length === 0) return;
+            // Dynamic pruning: compute mean and std then keep sims >= mean + factor*std
+            let thresholdAdj = this.plugin.settings.similarityThreshold;
+            if (useDynamic && candidates.length >= 4) {
+                const sims = candidates.map(c => c.sim);
+                const mean = sims.reduce((a,b)=>a+b,0)/sims.length;
+                const variance = sims.reduce((a,b)=>a + (b-mean)*(b-mean),0)/sims.length;
+                const std = Math.sqrt(variance);
+                thresholdAdj = Math.max(thresholdAdj, mean + 0.35 * std); // conservative raise
+            }
+            // Filter again using adjusted threshold
+            let filtered = candidates.filter(c => c.sim >= thresholdAdj);
+            // Sort descending by similarity
+            filtered.sort((a,b)=> b.sim - a.sim);
+            // Enforce max links per node if set (>0)
+            if (maxLinks > 0 && filtered.length > maxLinks) {
+                filtered = filtered.slice(0, maxLinks);
+            }
+            // Add links (avoid duplicates using pair key)
+            for (const c of filtered) {
+                const a = nodeId;
+                const b = c.otherId;
+                const pairKey = a < b ? `${a}|${b}` : `${b}|${a}`;
+                if (addedPairs.has(pairKey)) continue;
+                addedPairs.add(pairKey);
+                const linkId = `${a}<->${b}`;
+                this.links.push({
+                    source: a,
+                    target: b,
+                    id: linkId,
+                    similarity: c.sim,
+                    thickness: this.calculateThicknessFromSimilarity(c.sim)
+                });
+            }
+        });
     }
 
     createTraditionalLinks(files: TFile[], nodeMap: Map<string, GraphNode>) {
@@ -312,6 +361,7 @@ createTagLinks(files: TFile[], nodeMap: Map<string, GraphNode>, tagNodes: Map<st
                             source: file.path,
                             target: targetFile.path,
                             id: linkId,
+                            type: 'manual-link' as const,  // Mark as manual link to render as solid line
                             thickness: this.plugin.settings.defaultLinkThickness
                         });
                     }

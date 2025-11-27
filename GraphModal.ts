@@ -52,9 +52,9 @@ export class BetterGraphModal extends Modal {
         });
         resetBtn.onclick = () => this.resetZoom();
 
-        // Link thickness controls
-        const thicknessPanel = container.createDiv({ cls: 'thickness-panel' });
-        thicknessPanel.createEl('h3', { text: 'Link Thickness' });
+        // Edge thickness controls
+        const thicknessPanel = container.createDiv({ cls: 'edge-panel' });
+        thicknessPanel.createEl('h3', { text: 'Edge Thickness' });
 
         // Add thickness control for each link
         this.links.forEach(link => {
@@ -86,7 +86,7 @@ export class BetterGraphModal extends Modal {
                 this.plugin.settings.linkThickness[linkId] = newThickness;
                 this.plugin.saveSettings();
                 value.textContent = newThickness.toString();
-                this.updateLinkThickness(linkId, newThickness);
+                this.updateLinkThickness(newThickness);
             };
         });
     }
@@ -231,8 +231,8 @@ export class BetterGraphModal extends Modal {
         node.append('circle')
             .attr('r', this.plugin.settings.nodeSize)
             .attr('fill', 'var(--text-accent)')
-            .attr('stroke', 'var(--background-primary)')
-            .attr('stroke-width', 2);
+            .attr('stroke', 'none')
+            .attr('stroke-width', 0);
 
         // Add labels to nodes
         node.append('text')
@@ -321,9 +321,8 @@ export class BetterGraphModal extends Modal {
         }, 1000);
     }
 
-    updateLinkThickness(linkId: string, thickness: number) {
+    updateLinkThickness(thickness: number) {
         this.svg.selectAll('.graph-link')
-            .filter((d: any) => d.id === linkId)
             .attr('stroke-width', thickness);
     }
 

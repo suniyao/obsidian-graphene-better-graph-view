@@ -123,9 +123,42 @@ export default class CombinedPlugin extends Plugin {
                 }
             }
         );
+        // After incremental generation, persist embeddings into data.json
+        await this.syncIncrementalEmbeddingsToData();
         
         if (progress) {
             progress.hide();
+        }
+    }
+
+    /**
+     * Copy embeddings produced by the incremental generator (held in embedding-cache.json)
+     * into the plugin's persistent data.json so GraphView can access them via getEmbeddingLocally.
+     * Also performs a flattening migration if an older nested embeddings structure is detected.
+     */
+    private async syncIncrementalEmbeddingsToData(): Promise<void> {
+        try {
+            const data = await this.loadData() || {};
+            // Migration: if data.embeddings has a nested shape { version, embeddings: {..} }
+            if (data.embeddings && data.embeddings.version && data.embeddings.embeddings) {
+                data.embeddings = data.embeddings.embeddings; // flatten
+            }
+            if (!data.embeddings) data.embeddings = {};
+            const cacheEmbeddings = (this.embeddingService as any).embeddingCache?.embeddings || {};
+            let newCount = 0;
+            for (const [path, vector] of Object.entries(cacheEmbeddings)) {
+                if (Array.isArray(vector) && vector.length > 0) {
+                    if (!data.embeddings[path] || data.embeddings[path].length === 0) newCount++;
+                    data.embeddings[path] = vector;
+                }
+            }
+            await this.saveData(data);
+            if (newCount > 0) {
+                new Notice(`Synced ${newCount} new embeddings to data.json`);
+            }
+        } catch (e) {
+            console.error('Failed syncing incremental embeddings to data.json', e);
+            new Notice('Embedding sync failed; see console');
         }
     }
 

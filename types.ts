@@ -13,6 +13,14 @@ export interface BetterGraphSettings {
     useEmbeddings: boolean;
     similarityThreshold: number;
     embeddingWordLimit: number;
+    embeddingWordSkip?: number; // number of initial words to skip (for skipping format/template text)
+    excludeHeadingsFromEmbedding?: boolean; // if true, don't include markdown headings in embedding text
+    maxSimilarLinksPerNode?: number; // cap number of similarity links originating from a node
+    dynamicSimilarityPruning?: boolean; // use per-node distribution to prune weak links
+    // Local embedding (optional)
+    useLocalEmbeddings?: boolean;
+    localEmbeddingEndpoint?: string;
+    localModelName?: string;
     
     // Graph Display
     nodeSize: number;
@@ -25,6 +33,7 @@ export interface BetterGraphSettings {
     minLinkThickness: number;
     maxLinkThickness: number;
     linkThickness: Record<string, number>; // Custom thickness per link
+    dottedLinkThickness: number;
 }
 
 export const DEFAULT_SETTINGS: BetterGraphSettings = {
@@ -38,6 +47,14 @@ export const DEFAULT_SETTINGS: BetterGraphSettings = {
     useEmbeddings: false,
     similarityThreshold: 0.7,
     embeddingWordLimit: 100,
+    embeddingWordSkip: 0,
+    excludeHeadingsFromEmbedding: true,
+    maxSimilarLinksPerNode: 12,
+    dynamicSimilarityPruning: false,
+    // Local embedding defaults
+    useLocalEmbeddings: false,
+    localEmbeddingEndpoint: 'http://127.0.0.1:8000/embed',
+    localModelName: 'thenlper/gte-large',
     
     // Graph Display - Updated physics values
     nodeSize: 6,
@@ -49,7 +66,8 @@ export const DEFAULT_SETTINGS: BetterGraphSettings = {
     defaultLinkThickness: 2,
     minLinkThickness: 0.5,
     maxLinkThickness: 8,
-    linkThickness: {}
+    linkThickness: {},
+    dottedLinkThickness: 1.5,
 };
 
 export interface GraphNode extends d3.SimulationNodeDatum {
@@ -75,7 +93,7 @@ export interface GraphLink {
     id: string;
     similarity?: number;
     thickness?: number;
-    type?: 'link' | 'tag-link';
+    type?: 'link' | 'tag-link' | 'manual-link';
 }
 
 // Add these interfaces

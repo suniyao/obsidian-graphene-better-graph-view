@@ -103,13 +103,25 @@ export class GraphControls {
             }
         );
         
-        this.createSlider(displaySection, 'Link thickness',
+        this.createSlider(displaySection, 'Solid edge thickness',
             0.5, 5, 0.5, this.plugin.settings.defaultLinkThickness,
             (value) => {
                 this.plugin.settings.defaultLinkThickness = value;
                 this.plugin.saveSettings();
                 if (this.view.renderer) {
                     this.view.renderer.updateLinkThickness(value);
+                }
+            }
+        );
+
+        const dottedDefault = this.plugin.settings.dottedLinkThickness ?? Math.max(0.5, this.plugin.settings.defaultLinkThickness / 2);
+        this.createSlider(displaySection, 'Dotted edge size',
+            0.5, 4, 0.25, dottedDefault,
+            (value) => {
+                this.plugin.settings.dottedLinkThickness = value;
+                this.plugin.saveSettings();
+                if (this.view.renderer) {
+                    this.view.renderer.updateDottedLinkSize(value);
                 }
             }
         );
